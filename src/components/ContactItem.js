@@ -16,12 +16,10 @@ export const ContactItem = ({ contactData }) => {
       <span
         onClick={() => ctx.setChatView(contactData)}
         style={{ backgroundColor: "grey" }}
+        data-testid="setChatView-btn"
       >
         <h2>{contactData.name}</h2>
         <p>{getLastText(contactData.messages)}</p>
-        <button onClick={() => ctx.addMessage(contactData.name)}>
-          Add a message
-        </button>
       </span>
     </div>
   );

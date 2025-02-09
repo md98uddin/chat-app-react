@@ -1,7 +1,8 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChatList } from "./components/ChatList";
-import { test_contacts } from "./test-contact";
+import { useDispatch, useSelector } from "react-redux";
+import { updateContacts } from "./redux/actions";
 
 export const ContextWrapper = React.createContext();
 
@@ -11,34 +12,18 @@ function App() {
   //   name, string
   //   messages, [{name: string, messages: ['yea', 'we can']}]
   //  }
+  const test_contacts = useSelector((state) => state.contacts);
+  const dispatch = useDispatch();
   const [contacts, setContacts] = useState(test_contacts);
   const [chatViewContact, setChatViewContact] = useState([]);
 
+  useEffect(() => {
+    console.log("contacts fetched", contacts);
+  }, [contacts]);
+
   const addMessage = (contact_name, text) => {
-    let findContact = test_contacts.filter((c) => c.name === contact_name)[0];
     console.log(contact_name, "curr state", contacts);
-    setContacts((prevState) => {
-      console.log("prevState", prevState);
-      let nextState = [...prevState];
-      nextState.forEach((c) => {
-        if (c.name === contact_name) {
-          let timeStamp = findContact.messages.at(
-            findContact.messages.length - 1
-          ).timeStamp;
-
-          const newMsgBlock = {
-            name: "user",
-            messages: [text],
-            timeStamp: timeStamp + 1,
-          };
-          c.messages.push(newMsgBlock);
-        }
-      });
-
-      console.log("next state", nextState);
-
-      return [...nextState];
-    });
+    dispatch(updateContacts(contacts, contact_name, text));
   };
 
   const setChatView = (contactData) => {
